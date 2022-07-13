@@ -24,9 +24,8 @@ const HomePage: NextPage<Props> = ({ pokemons }) => {
 //- The page must be pre-rendered (for SEO) and be very fast — getStaticProps generates HTML and JSON files, both of which can be cached by a CDN for performance.
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
-  const { data } = await pokeAPI.get<PokemonListResponse>("/pokemon?limit=151");
 
-  // "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/1.svg"
+  const {data}= await pokeAPI.get<PokemonListResponse>("/pokemon?limit=151");
 
   const pokemons: SmallPokemon[] = data.results.map((pokemon, index) => ({
     ...pokemon,

@@ -9,6 +9,9 @@ interface Props {
 }
 
 export const Layout: FC<Props> = ({ children, title }) => {
+  const origin = typeof window !== "undefined" ? window.location.origin : "";
+  console.log(origin);
+
   return (
     <>
       <Head>
@@ -19,6 +22,12 @@ export const Layout: FC<Props> = ({ children, title }) => {
           content={`Information about Pokemon ${title}`}
         />
         <meta name="keywords" content={`${title}, pokemon, pokedex`} />
+        <meta property="og:title" content={`Information about ${title}`} />
+        <meta
+          property="og:description"
+          content={`This page contain information about ${title}`}
+        />
+        <meta property="og:image" content={`${origin}/banner.png`} />
       </Head>
 
       <Navbar />
