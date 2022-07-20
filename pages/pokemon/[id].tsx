@@ -11,6 +11,7 @@ import { Layout } from "../../components/layouts";
 import { Pokemon } from "../../interfaces";
 import { pokeAPI } from "../../api";
 import { getPokemonInfo, localFavorites } from "../../utils";
+import { redirect } from "next/dist/server/api-utils";
 
 interface Props {
   pokemon: Pokemon;
@@ -112,23 +113,32 @@ const PokemonPage: NextPage<Props> = ({ pokemon }) => {
   );
 };
 
-export default PokemonPage;
 
 export const getStaticPaths: GetStaticPaths = async (ctx) => {
   const pokemon151 = [...Array(151)].map((value, index) => `${index + 1}`);
-
+  
   return {
     paths: pokemon151.map((id) => ({ params: { id } })),
-    fallback: false,
+    // fallback: false,
+    fallback: "blocking",
   };
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { id } = params as { id: string };
 
+  const pokemon = await getPokemonInfo(id);
+  
+  if (!pokemon) {
+    return { redirect: { destination: "/", permanent: false } };
+  }
+  
   return {
-    props: {
-      pokemon: await getPokemonInfo(id),
+    props: { 
+      pokemon,
     },
+    revalidate: 86400, // 60 * 60 * 24,
   };
 };
+
+    export default PokemonPage;
